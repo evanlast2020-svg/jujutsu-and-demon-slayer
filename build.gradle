@@ -1,0 +1,45 @@
+plugins {
+    id 'java'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+}
+
+version = '1.0.0'
+group = 'com.teambridge'
+archivesBaseName = 'teambridge'
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(17)
+}
+
+minecraft {
+    mappings channel: 'official', version: '1.20.1'
+    accessTransformers = []
+    runs {
+        server {
+            workingDirectory project.file('run')
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                teambridge { source sourceSets.main }
+            }
+        }
+    }
+}
+
+repositories {
+    mavenLocal()
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.20.1-47.2.0'
+}
+
+jar {
+    manifest {
+        attributes([
+            'Specification-Title'   : 'teambridge',
+            'Specification-Version' : '1',
+            'Implementation-Title'  : 'teambridge',
+            'Implementation-Version': project.version
+        ])
+    }
+}
