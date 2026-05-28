@@ -2,6 +2,8 @@ package com.teambridge;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.living.MobSpawnEvent;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /**
@@ -37,4 +39,22 @@ public class TeamEnforcer {
             }
         }
     }
+    /**
+     * Blocks KNY's TanjiroEntity from spawning.
+     * That entity has a broken renderer that tries to cast TanjiroEntity to Zombie,
+     * causing a ClassCastException crash when it enters render range.
+     */
+    @SubscribeEvent
+    public static void onMobSpawn(MobSpawnEvent.FinalizeSpawn event) {
+        var entity = event.getEntity();
+        if (entity == null) return;
+        String className = entity.getClass().getName();
+        // Block all known KNY entities that cause ClassCastException crashes
+        if (className.startsWith("net.mcreator.kimetsunoyaiba.entity.Tanjiro")
+         || className.startsWith("net.mcreator.kimetsunoyaiba.entity.tanjiro")) {
+            event.setSpawnCancelled(true);
+        }
+    }
+
+
 }
